@@ -4,9 +4,10 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
-import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,6 +23,9 @@ class HashModelAssembler implements RepresentationModelAssembler<Hash, EntityMod
     // Double encode slashes to prevent HTTP 400
     String encodedDigest = urlDigest.replaceAll("%2F", "%252F");
 
-    return EntityModel.of(hash, Link.of(String.format("/hash/%s", encodedDigest)));
+    return EntityModel.of(hash, linkTo(methodOn(MainController.class).decodeHash(encodedDigest)).withSelfRel(),
+                                linkTo(methodOn(MainController.class).getHashPage(0, 20)).withRel("hashes"));
+
+    //Link.of(String.format("/hash/%s", encodedDigest)));
   }
 }
