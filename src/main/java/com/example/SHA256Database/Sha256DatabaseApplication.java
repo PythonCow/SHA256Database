@@ -79,6 +79,15 @@ public class Sha256DatabaseApplication implements CommandLineRunner {
       hashRepository.save(h);
     }
 
+    for (int i = 0; i < 1000; i++) {
+      byte[] randBytes = new byte[10];
+      rand.nextBytes(randBytes);
+      Hash h = new Hash(randBytes);
+
+      h.setCount(rand.nextInt(1000));
+      hashRepository.save(h);
+    }
+
     System.out.println("Inserted sample hashes.");
   }
 }
